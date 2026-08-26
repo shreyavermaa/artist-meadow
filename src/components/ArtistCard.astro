@@ -1,0 +1,17 @@
+---
+import type { Artist } from '../lib/supabase';
+import { artistGradient } from '../lib/supabase';
+const { artist } = Astro.props as { artist: Artist };
+const primary = artist.art_forms[0] ?? 'Artist';
+const meta = [artist.city, artist.country].filter(Boolean).join(', ');
+const bg = artist.hero_image ? '' : artistGradient(artist.slug);
+---
+<a class="card" href={`/artist/${artist.slug}`}>
+  <div class="arch" style={bg ? `background:${bg}` : ''}>
+    {artist.hero_image && <img src={artist.hero_image} alt={artist.name} loading="lazy" />}
+    <span class="cap">{primary}{artist.city ? ` · ${artist.city}` : ''}</span>
+  </div>
+  <div class="nm">{artist.name}</div>
+  <div class="meta">{meta}</div>
+  <span class="inq">Inquire</span>
+</a>

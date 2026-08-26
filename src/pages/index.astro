@@ -1,17 +1,15 @@
 ---
+export const prerender = false; // live featured artists from the database
 import Base from '../layouts/Base.astro';
 import Garden from '../components/Garden.astro';
 import FallingLeaves from '../components/FallingLeaves.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ArtistCard from '../components/ArtistCard.astro';
 import site from '../data/site.json';
+import { getFeaturedArtists } from '../lib/supabase';
 
-// Sample featured artists (Phase 2 swaps this for live Supabase data).
-const featured = [
-  { name: 'Shreya', art: 'Calligraphy', city: 'Indore', slug: 'shreya', grad: 'linear-gradient(160deg,#6E2A3E,#2A0C16)' },
-  { name: 'Aarohi Mehta', art: 'Mehndi', city: 'Jaipur', slug: 'aarohi-mehta', grad: 'linear-gradient(160deg,#8a4354,#3E1220)' },
-  { name: 'Kabir Rao', art: 'Engraving', city: 'Mumbai', slug: 'kabir-rao', grad: 'linear-gradient(160deg,#5c2f3d,#180710)' },
-];
+const featured = await getFeaturedArtists(3);
 ---
 <Base>
   <div class="page">
@@ -45,16 +43,7 @@ const featured = [
           <h2>{site.featured.title}</h2>
         </div>
         <div class="grid">
-          {featured.map((a) => (
-            <a class="card" href={`/artist/${a.slug}`}>
-              <div class="arch" style={`background:${a.grad}`}>
-                <span class="cap">{a.art} · {a.city}</span>
-              </div>
-              <div class="nm">{a.name}</div>
-              <div class="meta">{a.city}</div>
-              <span class="inq">Inquire</span>
-            </a>
-          ))}
+          {featured.map((a) => <ArtistCard artist={a} />)}
         </div>
       </section>
 

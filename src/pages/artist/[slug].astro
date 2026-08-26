@@ -1,0 +1,98 @@
+---
+export const prerender = false; // live per-artist page from the database
+import Base from '../../layouts/Base.astro';
+import Garden from '../../components/Garden.astro';
+import FallingLeaves from '../../components/FallingLeaves.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import site from '../../data/site.json';
+import { getArtistBySlug, artistGradient } from '../../lib/supabase';
+
+const { slug } = Astro.params;
+const artist = slug ? await getArtistBySlug(slug) : null;
+if (!artist) return new Response('Artist not found', { status: 404 });
+
+const region = [artist.city, artist.country].filter(Boolean).join(', ');
+const bg = artist.hero_image ? '' : artistGradient(artist.slug);
+const links = artist.links ?? {};
+const inquireHref = `mailto:${site.footer.email}?subject=${encodeURIComponent(`Inquiry: ${artist.name} via Artist Meadow`)}`;
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: artist.name,
+  jobTitle: artist.art_forms.join(', '),
+  address: { '@type': 'PostalAddress', addressLocality: artist.city, addressCountry: artist.country },
+  url: new URL(`/artist/${artist.slug}`, Astro.site).toString(),
+};
+---
+<Base
+  title={`${artist.name} — ${artist.art_forms[0] ?? 'Artist'}${artist.city ? ` in ${artist.city}` : ''} · Artist Meadow`}
+  description={artist.story ?? `${artist.name}, ${artist.art_forms.join(', ')} in ${region}.`}
+>
+  <div class="page">
+    <Garden />
+    <FallingLeaves />
+    <div class="wrap">
+      <Header brand={site.brand} nav={site.nav} />
+
+      <section class="artist-hero">
+        <div class="artist-photo" style={bg ? `background:${bg}` : ''}>
+          {artist.hero_image && <img src={artist.hero_image} alt={artist.name} />}
+        </div>
+        <div class="artist-info">
+          <div class="lbl" style="color:var(--gold)">{artist.art_forms[0] ?? 'Artist'}</div>
+          <h1>{artist.name}</h1>
+          {region && <div class="artist-region">{region}</div>}
+          {artist.art_forms.length > 0 && (
+            <div class="artist-tags">{artist.art_forms.map((t) => <span>{t}</span>)}</div>
+          )}
+          {artist.story && <p class="artist-intro">{artist.story}</p>}
+          {(links.instagram || links.website || links.pinterest || links.youtube) && (
+            <div class="artist-links">
+              {links.instagram && (
+                <a href={`https://instagram.com/${links.instagram}`} target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" /><circle cx="12" cy="12" r="4.3" /><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" /></svg>
+                  @{links.instagram}
+                </a>
+              )}
+              {links.website && (
+                <a href={links.website} target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9.2" /><path d="M2.8 12h18.4M12 2.8c3.2 3 3.2 15.4 0 18.4M12 2.8c-3.2 3-3.2 15.4 0 18.4" /></svg>
+                  Website
+                </a>
+              )}
+              {links.pinterest && (
+                <a href={links.pinterest} target="_blank" rel="noopener">Pinterest</a>
+              )}
+              {links.youtube && (
+                <a href={links.youtube} target="_blank" rel="noopener">YouTube</a>
+              )}
+            </div>
+          )}
+          <a class="inq-btn" href={inquireHref}>Inquire through Artist Meadow</a>
+        </div>
+      </section>
+
+      {artist.story && (
+        <section class="artist-story">
+          <span class="lbl">In their words</span>
+          <p>&ldquo;{artist.story}&rdquo;</p>
+        </section>
+      )}
+
+      {artist.gallery && artist.gallery.length > 0 && (
+        <section class="artist-gallery">
+          <div class="grid3">
+            {artist.gallery.map((src) => (
+              <div class="g"><img src={src} alt={`Work by ${artist.name}`} loading="lazy" /></div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <Footer brand={site.brand} footer={site.footer} />
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+</Base>

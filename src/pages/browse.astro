@@ -1,0 +1,58 @@
+---
+export const prerender = false; // live results from the database
+import Base from '../layouts/Base.astro';
+import Garden from '../components/Garden.astro';
+import FallingLeaves from '../components/FallingLeaves.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ArtistCard from '../components/ArtistCard.astro';
+import site from '../data/site.json';
+import { getApprovedArtists } from '../lib/supabase';
+
+const params = Astro.url.searchParams;
+const q = params.get('q') ?? '';
+const category = params.get('category') ?? '';
+const city = params.get('city') ?? '';
+
+const artists = await getApprovedArtists({
+  q: q || undefined,
+  category: category || undefined,
+  city: city || undefined,
+});
+---
+<Base title={`Browse artists${category ? ` · ${category}` : ''} — Artist Meadow`}>
+  <div class="page">
+    <Garden />
+    <FallingLeaves />
+    <div class="wrap">
+      <Header brand={site.brand} nav={site.nav} />
+
+      <section class="browse-head">
+        <div class="lbl eyebrow">The Meadow</div>
+        <h1>Find your artist</h1>
+        <p class="lede">{artists.length} {artists.length === 1 ? 'artist' : 'artists'} in bloom</p>
+        <form class="browse-search glass" action="/browse" method="get">
+          <input name="q" value={q} placeholder="Search art form, city, or name…" aria-label="Search artists" />
+          <button type="submit">Search</button>
+        </form>
+      </section>
+
+      <nav class="cats">
+        <a href="/browse" class={!category ? 'active' : ''}>All</a>
+        {site.categories.map((c) => (
+          <a href={`/browse?category=${encodeURIComponent(c)}`} class={category === c ? 'active' : ''}>{c}</a>
+        ))}
+      </nav>
+
+      <section class="section">
+        {artists.length > 0 ? (
+          <div class="grid">{artists.map((a) => <ArtistCard artist={a} />)}</div>
+        ) : (
+          <p class="empty">No artists here yet — but the meadow is growing. 🌿<br />Are you an artist? <a href="/join" style="color:var(--blush)">Join us</a>.</p>
+        )}
+      </section>
+
+      <Footer brand={site.brand} footer={site.footer} />
+    </div>
+  </div>
+</Base>
