@@ -1,0 +1,11 @@
+---
+interface NavItem { label: string; href: string; }
+const { brand, nav = [] } = Astro.props as { brand: string; nav: NavItem[] };
+---
+<header class="site-top glass">
+  <a class="brand" href="/">{brand}</a>
+  <nav class="nav">
+    {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    <a class="nav-cta" href="/join">Join Us</a>
+  </nav>
+</header>

@@ -1,0 +1,16 @@
+---
+const { brand, footer } = Astro.props as {
+  brand: string;
+  footer: { tagline: string; credit: string; email: string; instagram: string };
+};
+---
+<footer class="site-footer">
+  <span class="brand">{brand}</span>
+  <p>{footer.tagline}</p>
+  <p>
+    <a href={`https://instagram.com/${footer.instagram}`}>@{footer.instagram}</a>
+    &nbsp;·&nbsp;
+    <a href={`mailto:${footer.email}`}>{footer.email}</a>
+  </p>
+  <p style="margin-top:10px;opacity:.7">{footer.credit}</p>
+</footer>

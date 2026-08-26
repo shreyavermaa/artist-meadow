@@ -1,0 +1,50 @@
+---
+// The scattered botanical canopy: faint big leaves behind, crisp leaves in front,
+// forget-me-not blooms — placed naturally (not mirrored). Fills its positioned parent.
+const backLeaves = [
+  'top:-3%;left:-5%;width:262px;opacity:.16;filter:blur(1.2px);transform:rotate(-6deg)',
+  'top:11%;right:-5%;width:236px;opacity:.15;filter:blur(1.2px);transform:scaleX(-1) rotate(4deg)',
+  'top:33%;left:-4%;width:212px;opacity:.12;filter:blur(1.2px);transform:rotate(9deg)',
+  'top:50%;right:-4%;width:250px;opacity:.14;filter:blur(1.2px);transform:scaleX(-1) rotate(-5deg)',
+  'top:71%;left:-5%;width:240px;opacity:.13;filter:blur(1.2px)',
+  'top:87%;right:-4%;width:224px;opacity:.14;filter:blur(1.2px);transform:scaleX(-1) rotate(6deg)',
+];
+const frontLeaves = [
+  'top:5%;left:16px;width:118px;opacity:.62;transform:rotate(-5deg)',
+  'top:19%;right:20px;width:84px;opacity:.55;transform:scaleX(-1) rotate(7deg)',
+  'top:37%;left:10px;width:98px;opacity:.5;transform:rotate(4deg)',
+  'top:53%;right:26px;width:74px;opacity:.48;transform:scaleX(-1)',
+  'top:66%;left:18px;width:110px;opacity:.55;transform:rotate(-3deg)',
+  'top:81%;right:16px;width:100px;opacity:.52;transform:scaleX(-1) rotate(5deg)',
+  'top:93%;left:48px;width:70px;opacity:.46;transform:rotate(8deg)',
+];
+const C = {
+  pink:   { fill: '#EEBDCB', stroke: '#DB93A6', eye: '#F3D98A' },
+  yellow: { fill: '#F0D488', stroke: '#D9B85E', eye: '#E79A82' },
+  blue:   { fill: '#AEC6E2', stroke: '#87A9CC', eye: '#F3D98A' },
+};
+const blooms = [
+  { pos: 'top:14%;left:38px;width:44px',    t: 'pink' },
+  { pos: 'top:16.5%;left:94px;width:23px',  t: 'blue' },
+  { pos: 'top:24%;right:44px;width:34px',   t: 'yellow' },
+  { pos: 'top:45%;left:26px;width:28px',    t: 'yellow' },
+  { pos: 'top:58%;right:36px;width:30px',   t: 'pink' },
+  { pos: 'top:75%;left:34px;width:32px',    t: 'pink' },
+  { pos: 'top:88%;right:46px;width:27px',   t: 'yellow' },
+];
+---
+<div class="garden" aria-hidden="true">
+  {backLeaves.map((s) => (
+    <svg class="sprig" style={`color:#8fb083;${s}`} viewBox="0 0 140 260"><use href="#sprig" /></svg>
+  ))}
+  {frontLeaves.map((s) => (
+    <svg class="sprig" style={`color:#A9C39D;${s}`} viewBox="0 0 140 260"><use href="#sprig" /></svg>
+  ))}
+  {blooms.map((b) => (
+    <svg class="bloom" style={b.pos} viewBox="0 0 80 80">
+      <use href="#fmn" fill={C[b.t].fill} fill-opacity="0.96" stroke={C[b.t].stroke} stroke-width="1" />
+      <circle cx="40" cy="40" r="5" fill={C[b.t].eye} />
+      <circle cx="40" cy="40" r="2" fill="#FBF3E0" />
+    </svg>
+  ))}
+</div>

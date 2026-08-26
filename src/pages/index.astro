@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import Garden from '../components/Garden.astro';
+import FallingLeaves from '../components/FallingLeaves.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import site from '../data/site.json';
+
+// Sample featured artists (Phase 2 swaps this for live Supabase data).
+const featured = [
+  { name: 'Shreya', art: 'Calligraphy', city: 'Indore', slug: 'shreya', grad: 'linear-gradient(160deg,#6E2A3E,#2A0C16)' },
+  { name: 'Aarohi Mehta', art: 'Mehndi', city: 'Jaipur', slug: 'aarohi-mehta', grad: 'linear-gradient(160deg,#8a4354,#3E1220)' },
+  { name: 'Kabir Rao', art: 'Engraving', city: 'Mumbai', slug: 'kabir-rao', grad: 'linear-gradient(160deg,#5c2f3d,#180710)' },
+];
+---
+<Base>
+  <div class="page">
+    <Garden />
+    <FallingLeaves />
+    <div class="wrap">
+      <Header brand={site.brand} nav={site.nav} />
+
+      <section class="hero">
+        <div class="hero-frame glass">
+          <div class="flourish">{site.hero.flourish}</div>
+          <div class="lbl eyebrow">{site.hero.eyebrow}</div>
+          <h1 set:html={site.hero.titleHtml}></h1>
+          <p class="lede">{site.hero.lede}</p>
+          <form class="search glass" action="/browse" method="get">
+            <input name="q" placeholder={site.hero.searchPlaceholder} aria-label="Search artists" />
+            <button type="submit">Search</button>
+          </form>
+        </div>
+      </section>
+
+      <nav class="cats">
+        {site.categories.map((c) => (
+          <a href={`/browse?category=${encodeURIComponent(c)}`}>{c}</a>
+        ))}
+      </nav>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="lbl">{site.featured.label}</div>
+          <h2>{site.featured.title}</h2>
+        </div>
+        <div class="grid">
+          {featured.map((a) => (
+            <a class="card" href={`/artist/${a.slug}`}>
+              <div class="arch" style={`background:${a.grad}`}>
+                <span class="cap">{a.art} · {a.city}</span>
+              </div>
+              <div class="nm">{a.name}</div>
+              <div class="meta">{a.city}</div>
+              <span class="inq">Inquire</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="join">
+        <div class="script">{site.join.script}</div>
+        <h3>{site.join.text}</h3>
+        <a class="glass" href={site.join.url}>{site.join.cta}</a>
+      </section>
+
+      <Footer brand={site.brand} footer={site.footer} />
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,139 @@
+/* ===== Artist Meadow — global styles (deep-wine botanical garden) ===== */
+
+:root {
+  --wine: #3E1524;
+  --wine-2: #160610;
+  --cream: #F4EDE0;
+  --ink: #fdf5ee;        /* text on wine */
+  --ink-dark: #3A222D;   /* text on cream (used on ivory pages) */
+  --soft: #c9b3bb;
+  --blush: #EBB1C0;
+  --gold: #CBB27E;
+  --sage: #A9C39D;
+  --line: rgba(245, 239, 225, 0.22);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Jost', system-ui, sans-serif;
+  color: var(--ink);
+  background: #160610;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---- page canvas: one continuous wine garden ---- */
+.page {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  background:
+    radial-gradient(80% 42% at 50% 0%, rgba(122, 46, 68, 0.5), transparent 62%),
+    linear-gradient(180deg, #3E1524 0%, #2C0F1C 34%, #25101A 64%, #160610 100%);
+}
+.wrap { position: relative; z-index: 3; }
+
+/* ---- frosted glass ---- */
+.glass {
+  background: rgba(247, 242, 232, 0.07);
+  -webkit-backdrop-filter: blur(12px) saturate(1.15);
+  backdrop-filter: blur(12px) saturate(1.15);
+  border: 1px solid rgba(245, 239, 225, 0.24);
+  box-shadow: 0 22px 54px rgba(16, 4, 10, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.13);
+}
+
+/* ---- garden canopy ---- */
+.garden { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.garden .sprig, .garden .bloom { position: absolute; pointer-events: none; }
+
+/* ---- falling leaves ---- */
+.fall { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.fleaf {
+  position: absolute; top: -46px; opacity: 0; will-change: transform;
+  animation-name: fall; animation-timing-function: linear; animation-iteration-count: infinite;
+}
+@keyframes fall {
+  0%   { transform: translate3d(0, -46px, 0) rotate(0deg); opacity: 0; }
+  6%   { opacity: 0.8; }
+  30%  { transform: translate3d(30px, 430px, 0) rotate(120deg); }
+  60%  { transform: translate3d(-22px, 900px, 0) rotate(250deg); }
+  94%  { opacity: 0.75; }
+  100% { transform: translate3d(18px, 1480px, 0) rotate(372deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .fleaf { animation: none; display: none; } }
+
+/* ---- labels ---- */
+.lbl { font-weight: 400; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }
+
+/* ---- header ---- */
+.site-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 18px 22px 0; padding: 12px 22px; border-radius: 40px;
+}
+.brand { font-family: 'Parisienne', cursive; font-size: 28px; color: var(--cream); }
+.nav { display: flex; gap: 26px; align-items: center; }
+.nav a { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #ecdfe2; }
+.nav .nav-cta { border: 1px solid rgba(245, 239, 225, 0.5); padding: 8px 16px; border-radius: 22px; }
+
+/* ---- hero ---- */
+.hero { text-align: center; padding: 46px 30px 40px; }
+.hero-frame { display: inline-block; border-radius: 8px; padding: 38px 50px 40px; position: relative; max-width: 92%; }
+.hero-frame .flourish { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-family: 'Parisienne', cursive; color: var(--blush); font-size: 23px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 15px; color: #e6d3d9; }
+.eyebrow::before, .eyebrow::after { content: ""; width: 22px; height: 1px; background: var(--gold); }
+.hero h1 { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 52px; line-height: 1.05; margin: 0 0 14px; color: #fdf5ee; }
+.hero h1 em { font-style: italic; color: var(--blush); }
+.hero .lede { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: #e7d6dc; margin: 0 auto 24px; max-width: 400px; }
+.search { display: flex; align-items: center; max-width: 440px; margin: 0 auto; border-radius: 40px; padding: 5px 5px 5px 18px; }
+.search input { flex: 1; border: none; outline: none; background: none; font-size: 13.5px; padding: 11px 4px; color: #fdf5ee; font-family: 'Jost', sans-serif; }
+.search input::placeholder { color: #c8b9c0; }
+.search button { border: none; background: var(--cream); color: #3E1524; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 12px 24px; border-radius: 30px; cursor: pointer; font-family: 'Jost', sans-serif; }
+
+/* ---- category chips ---- */
+.cats { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; padding: 34px 40px 20px; max-width: 780px; margin: 0 auto; }
+.cats a { font-size: 12px; letter-spacing: 0.05em; color: #f3e7ea; padding: 8px 16px; border-radius: 20px;
+  background: rgba(247, 242, 232, 0.06); border: 1px solid rgba(245, 239, 225, 0.22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: background 0.2s; }
+.cats a:hover { background: rgba(247, 242, 232, 0.14); }
+
+/* ---- section + artist cards ---- */
+.section { padding: 20px 34px 30px; max-width: 1080px; margin: 0 auto; }
+.section-head { text-align: center; margin-bottom: 30px; }
+.section-head .lbl { color: var(--gold); }
+.section-head h2 { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 33px; margin: 8px 0 0; color: #fdf5ee; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.card { text-align: center; }
+.card .arch { height: 250px; border-radius: 130px 130px 6px 6px; position: relative; overflow: hidden;
+  box-shadow: 0 16px 40px rgba(10, 3, 8, 0.4); border: 1px solid rgba(245, 239, 225, 0.12); }
+.card .arch img { width: 100%; height: 100%; object-fit: cover; }
+.card .cap { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); color: #fdf5ee;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  background: rgba(20, 8, 14, 0.4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.2); }
+.card .nm { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 22px; margin: 16px 0 3px; color: #fdf5ee; }
+.card .meta { font-size: 11px; letter-spacing: 0.05em; color: var(--soft); margin-bottom: 10px; }
+.card .inq { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--blush); border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+
+/* ---- join band ---- */
+.join { text-align: center; padding: 46px 40px 30px; }
+.join .script { font-family: 'Parisienne', cursive; color: var(--blush); font-size: 30px; }
+.join h3 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 28px; line-height: 1.3; margin: 6px auto 22px; max-width: 520px; color: #fdf5ee; }
+.join a { display: inline-block; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; padding: 14px 32px; border-radius: 30px; color: #fdf5ee; }
+
+/* ---- footer ---- */
+.site-footer { text-align: center; padding: 30px 40px 46px; color: var(--soft); font-size: 11.5px; letter-spacing: 0.05em; }
+.site-footer .brand { font-size: 22px; display: block; margin-bottom: 8px; }
+.site-footer a { color: var(--blush); }
+
+/* ---- responsive ---- */
+@media (max-width: 820px) {
+  .grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+  .hero h1 { font-size: 40px; }
+  .nav { display: none; }
+}

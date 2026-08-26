@@ -1,0 +1,37 @@
+{
+  "brand": "Artist Meadow",
+  "nav": [
+    { "label": "Browse", "href": "/browse" },
+    { "label": "For Artists", "href": "/join" },
+    { "label": "About", "href": "/about" }
+  ],
+  "hero": {
+    "flourish": "the meadow",
+    "eyebrow": "A Meadow of Artists",
+    "titleHtml": "Find an artist for your<br><em>most beautiful</em> moments",
+    "lede": "Calligraphers, engravers, mehndi artists & muralists — each one personally welcomed in.",
+    "searchPlaceholder": "live calligraphy in Jaipur"
+  },
+  "categories": [
+    "Calligraphy",
+    "Mehndi & Henna",
+    "Engraving",
+    "Muralists",
+    "Live Portraits",
+    "Floral Art",
+    "Custom Illustration"
+  ],
+  "featured": { "label": "Handpicked", "title": "A few of our artists" },
+  "join": {
+    "script": "Are you an artist?",
+    "text": "Every artist here was personally welcomed in. We would love to welcome you too.",
+    "cta": "Join Artist Meadow",
+    "url": "/join"
+  },
+  "footer": {
+    "tagline": "A meadow of artists for weddings, events & custom work.",
+    "credit": "A Gallery of Shreya project",
+    "email": "hello@artistmeadow.com",
+    "instagram": "artistmeadow"
+  }
+}
