@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /manage
+Disallow: /admin
+
+Sitemap: https://artistmeadow.com/sitemap.xml
