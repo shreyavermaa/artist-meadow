@@ -15,7 +15,7 @@ if (!artist) return new Response('Artist not found', { status: 404 });
 const region = [artist.city, artist.country].filter(Boolean).join(', ');
 const bg = artist.hero_image ? '' : artistGradient(artist.slug);
 const links = artist.links ?? {};
-const inquireHref = `mailto:${site.footer.email}?subject=${encodeURIComponent(`Inquiry: ${artist.name} via Artist Meadow`)}`;
+const inquireHref = `/inquire?artist=${artist.slug}`;
 
 const jsonld = {
   '@context': 'https://schema.org',

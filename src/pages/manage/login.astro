@@ -1,0 +1,23 @@
+---
+export const prerender = false;
+import PageShell from '../../layouts/PageShell.astro';
+const err = Astro.url.searchParams.get('e');
+---
+<PageShell title="Log in — Manage Artist Meadow">
+  <section class="page-head">
+    <div class="script">Welcome back</div>
+    <h1>Manage the meadow</h1>
+  </section>
+  <div class="form-wrap">
+    <form method="POST" action="/api/admin/login">
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autofocus />
+      </div>
+      {err && <div class="form-status">Wrong password — try again.</div>}
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Enter</button>
+      </div>
+    </form>
+  </div>
+</PageShell>

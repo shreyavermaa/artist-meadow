@@ -1,0 +1,64 @@
+---
+export const prerender = false;
+import PageShell from '../../layouts/PageShell.astro';
+import { isAuthed, adminReady, authConfigured, adminListPending } from '../../lib/admin';
+import { artistGradient } from '../../lib/supabase';
+
+const configured = authConfigured;
+let authed = false;
+if (configured) {
+  authed = await isAuthed(Astro.cookies);
+  if (!authed) return Astro.redirect('/manage/login');
+}
+const pending = configured && authed && adminReady ? await adminListPending() : [];
+---
+<PageShell title="Manage — Artist Meadow">
+  <section class="page-head">
+    <h1>Manage the meadow</h1>
+  </section>
+
+  {!configured ? (
+    <div class="admin-wrap">
+      <p class="empty">
+        To enable the admin, add <b>ADMIN_PASSWORD</b> and <b>SUPABASE_SERVICE_ROLE_KEY</b>
+        to your environment, then reload.
+      </p>
+    </div>
+  ) : (
+    <div class="admin-wrap">
+      <div class="admin-tabs">
+        <a href="/manage" class="active">Pending ({pending.length})</a>
+        <a href="/manage/inquiries">Inquiries</a>
+        <a href="/api/admin/logout">Log out</a>
+      </div>
+
+      {!adminReady && (
+        <p class="empty">Add <b>SUPABASE_SERVICE_ROLE_KEY</b> to see and approve submissions.</p>
+      )}
+
+      {adminReady && pending.length === 0 && (
+        <p class="empty">No submissions waiting. The meadow is calm. 🌿</p>
+      )}
+
+      {pending.map((a: any) => (
+        <div class="admin-row">
+          <div class="thumb" style={`background:${a.hero_image ? `url(${a.hero_image}) center/cover` : artistGradient(a.slug)}`}></div>
+          <div class="grow">
+            <div class="t">{a.name}</div>
+            <div class="s">{(a.art_forms ?? []).join(', ')}{a.city ? ` · ${a.city}` : ''}</div>
+          </div>
+          <form method="POST" action="/api/admin/action">
+            <input type="hidden" name="id" value={a.id} />
+            <input type="hidden" name="status" value="approved" />
+            <button class="btn-sm ok" type="submit">Approve</button>
+          </form>
+          <form method="POST" action="/api/admin/action">
+            <input type="hidden" name="id" value={a.id} />
+            <input type="hidden" name="status" value="rejected" />
+            <button class="btn-sm" type="submit">Reject</button>
+          </form>
+        </div>
+      ))}
+    </div>
+  )}
+</PageShell>

@@ -1,0 +1,37 @@
+---
+export const prerender = false;
+import PageShell from '../../layouts/PageShell.astro';
+import { isAuthed, adminReady, authConfigured, adminListInquiries } from '../../lib/admin';
+
+if (!authConfigured || !(await isAuthed(Astro.cookies))) return Astro.redirect('/manage/login');
+const inquiries = adminReady ? await adminListInquiries() : [];
+
+function when(iso: string): string {
+  try { return new Date(iso).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }); }
+  catch { return iso; }
+}
+---
+<PageShell title="Inquiries — Artist Meadow">
+  <section class="page-head"><h1>Inquiries</h1></section>
+  <div class="admin-wrap">
+    <div class="admin-tabs">
+      <a href="/manage">Pending</a>
+      <a href="/manage/inquiries" class="active">Inquiries ({inquiries.length})</a>
+      <a href="/api/admin/logout">Log out</a>
+    </div>
+
+    {!adminReady && <p class="empty">Add <b>SUPABASE_SERVICE_ROLE_KEY</b> to read inquiries.</p>}
+    {adminReady && inquiries.length === 0 && <p class="empty">No inquiries yet. 🌿</p>}
+
+    {inquiries.map((q: any) => (
+      <div class="admin-row">
+        <div class="grow">
+          <div class="t">{q.client_name} <span style="font-size:12px;color:var(--soft)">wants {q.artist_slug ?? 'an artist'}</span></div>
+          <div class="s">{q.client_contact}{q.event_details ? ` · ${q.event_details}` : ''}</div>
+          <div class="s" style="opacity:.7">{when(q.created_at)}</div>
+        </div>
+        <a class="btn-sm" href={`mailto:?subject=${encodeURIComponent('Artist Meadow introduction')}`}>Reply</a>
+      </div>
+    ))}
+  </div>
+</PageShell>

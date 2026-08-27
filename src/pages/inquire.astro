@@ -1,0 +1,70 @@
+---
+export const prerender = false;
+import PageShell from '../layouts/PageShell.astro';
+import { getArtistBySlug, createInquiry } from '../lib/supabase';
+
+const params = Astro.url.searchParams;
+let slug = params.get('artist') ?? '';
+let sent = false;
+let error = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  slug = String(form.get('artist') ?? slug);
+  const client_name = String(form.get('client_name') ?? '').trim();
+  const client_contact = String(form.get('client_contact') ?? '').trim();
+  const event_details = String(form.get('event_details') ?? '').trim();
+  if (client_name && client_contact) {
+    const r = await createInquiry({ artist_slug: slug, client_name, client_contact, event_details });
+    sent = r.ok;
+    if (!r.ok) error = 'Something went wrong — please try again.';
+  } else {
+    error = 'Please add your name and a way to reach you.';
+  }
+}
+
+const artist = slug ? await getArtistBySlug(slug) : null;
+const who = artist ? artist.name : 'an artist';
+---
+<PageShell title={`Inquire — ${who} · Artist Meadow`} description="Tell us about your celebration and we'll connect you.">
+  {sent ? (
+    <div class="success-card glass">
+      <h2>Sent with love 🌿</h2>
+      <p>Thank you. We'll connect you with {who} personally — no bots, no spam, just a warm introduction. Keep an eye on your messages.</p>
+      <p style="margin-top:18px"><a class="inq-btn" href="/browse">Back to the meadow</a></p>
+    </div>
+  ) : (
+    <>
+      <section class="page-head">
+        <div class="script">{artist ? `Love ${artist.name}'s work?` : 'Say hello'}</div>
+        <h1>Tell us about your celebration</h1>
+        <p class="lede">Share a few details and we'll connect you with {who} ourselves.</p>
+      </section>
+
+      <div class="form-wrap">
+        <form method="POST">
+          <input type="hidden" name="artist" value={slug} />
+          <div class="two-col">
+            <div class="field">
+              <label for="client_name">Your name *</label>
+              <input type="text" id="client_name" name="client_name" required placeholder="Your name" />
+            </div>
+            <div class="field">
+              <label for="client_contact">Phone or email *</label>
+              <input type="text" id="client_contact" name="client_contact" required placeholder="How we reach you" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="event_details">About your event</label>
+            <textarea id="event_details" name="event_details" placeholder="Date, city, what you're dreaming of…"></textarea>
+          </div>
+          {error && <div class="form-status">{error}</div>}
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Send inquiry</button>
+            <div class="form-note">Your details come straight to us — we personally make the introduction. 🤍</div>
+          </div>
+        </form>
+      </div>
+    </>
+  )}
+</PageShell>

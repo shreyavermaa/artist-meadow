@@ -1,0 +1,160 @@
+---
+export const prerender = false;
+import PageShell from '../layouts/PageShell.astro';
+import site from '../data/site.json';
+
+const cloud = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME ?? '';
+const preset = import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? '';
+---
+<PageShell title="Join Artist Meadow" description="Add your work to Artist Meadow — a curated meadow of artists for weddings, events and custom work.">
+  <section class="page-head">
+    <div class="script">Are you an artist?</div>
+    <h1>Join the meadow</h1>
+    <p class="lede">Add your work in a few quiet minutes. We personally welcome every artist in, so your page appears once we've had a loving look.</p>
+  </section>
+
+  <div class="form-wrap">
+    <form id="join-form">
+      <div class="field">
+        <label for="name">Your name *</label>
+        <input type="text" id="name" name="name" required placeholder="e.g. Aarohi Mehta" />
+      </div>
+
+      <div class="field">
+        <label>What do you make? *</label>
+        <div class="checks">
+          {site.categories.map((c) => (
+            <label><input type="checkbox" name="art_forms" value={c} /> {c}</label>
+          ))}
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="keywords">Other keywords (comma separated)</label>
+        <input type="text" id="keywords" name="keywords" placeholder="bridal, gold leaf, live event" />
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="Jaipur" />
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" value="India" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="story">Your story</label>
+        <textarea id="story" name="story" placeholder="A few warm lines about who you are and what you make…"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="hero">A hero photo of your work</label>
+        <input type="file" id="hero" name="hero" accept="image/*" />
+      </div>
+      <div class="field">
+        <label for="gallery">A few more photos (optional)</label>
+        <input type="file" id="gallery" name="gallery" accept="image/*" multiple />
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label for="instagram">Instagram handle</label>
+          <input type="text" id="instagram" name="instagram" placeholder="yourhandle" />
+        </div>
+        <div class="field">
+          <label for="website">Website</label>
+          <input type="url" id="website" name="website" placeholder="https://…" />
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label for="pinterest">Pinterest</label>
+          <input type="url" id="pinterest" name="pinterest" placeholder="https://…" />
+        </div>
+        <div class="field">
+          <label for="youtube">YouTube</label>
+          <input type="url" id="youtube" name="youtube" placeholder="https://…" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="price_hint">Price hint (optional)</label>
+        <input type="text" id="price_hint" name="price_hint" placeholder="From ₹8,000 · or 'On request'" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Submit to the meadow</button>
+        <div class="form-status" id="status"></div>
+        <div class="form-note">No public phone numbers — inquiries reach you privately through us. 🌿</div>
+      </div>
+    </form>
+
+    <div class="success-card glass" id="success" style="display:none">
+      <h2>Thank you 🌸</h2>
+      <p>Your submission is in the meadow's care. We'll review it with love and welcome you in soon.</p>
+    </div>
+  </div>
+
+  <script define:vars={{ cloud, preset }}>
+    const form = document.getElementById('join-form');
+    const statusEl = document.getElementById('status');
+
+    async function upload(file) {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', preset);
+      const r = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, { method: 'POST', body: fd });
+      if (!r.ok) throw new Error('upload failed');
+      return (await r.json()).secure_url;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type=submit]');
+      btn.disabled = true;
+      statusEl.textContent = 'Sending…';
+      try {
+        const fd = new FormData(form);
+        const art_forms = fd.getAll('art_forms');
+        if (art_forms.length === 0) { statusEl.textContent = 'Please pick at least one art form.'; btn.disabled = false; return; }
+
+        let hero_image = null, gallery = [];
+        if (cloud && preset) {
+          const heroFile = form.hero.files[0];
+          if (heroFile) hero_image = await upload(heroFile);
+          for (const f of form.gallery.files) gallery.push(await upload(f));
+        }
+
+        const payload = {
+          name: fd.get('name'),
+          art_forms,
+          keywords: String(fd.get('keywords') || '').split(',').map((s) => s.trim()).filter(Boolean),
+          city: fd.get('city') || null,
+          country: fd.get('country') || 'India',
+          story: fd.get('story') || null,
+          hero_image, gallery,
+          links: {
+            instagram: fd.get('instagram') || '',
+            website: fd.get('website') || '',
+            pinterest: fd.get('pinterest') || '',
+            youtube: fd.get('youtube') || '',
+          },
+          price_hint: fd.get('price_hint') || null,
+        };
+
+        const res = await fetch('/api/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error('submit failed');
+        form.style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+        statusEl.textContent = '';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        statusEl.textContent = 'Something went wrong — please try again.';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</PageShell>
