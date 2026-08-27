@@ -1,14 +1,41 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+// Thin Supabase REST (PostgREST) client via fetch — no realtime/WebSocket,
+// so it runs identically on Node (dev) and Cloudflare (prod).
 
 const url = import.meta.env.PUBLIC_SUPABASE_URL as string | undefined;
-const anon = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string | undefined;
+const key = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string | undefined;
 
-/** True once real Supabase keys are configured in .env. */
-export const supabaseReady = Boolean(url && anon);
+/** True once real Supabase keys are configured. */
+export const supabaseReady = Boolean(url && key);
 
-export const supabase: SupabaseClient | null = supabaseReady
-  ? createClient(url!, anon!)
-  : null;
+const headers = () => ({
+  apikey: key as string,
+  Authorization: `Bearer ${key}`,
+});
+
+async function restGet(query: string): Promise<any[]> {
+  if (!supabaseReady) return [];
+  try {
+    const res = await fetch(`${url}/rest/v1/${query}`, { headers: headers() });
+    if (!res.ok) return [];
+    return (await res.json()) as any[];
+  } catch {
+    return [];
+  }
+}
+
+async function restPost(table: string, body: unknown): Promise<{ ok: boolean }> {
+  if (!supabaseReady) return { ok: false };
+  try {
+    const res = await fetch(`${url}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: { ...headers(), 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify(body),
+    });
+    return { ok: res.ok };
+  } catch {
+    return { ok: false };
+  }
+}
 
 export interface Artist {
   id?: string;
@@ -33,7 +60,7 @@ export interface ArtistQuery {
   city?: string;
 }
 
-/** Sample data so the site works beautifully before Supabase keys are added. */
+/** Sample data so the site works before Supabase keys are added. */
 export const sampleArtists: Artist[] = [
   {
     slug: 'shreya', name: 'Shreya', art_forms: ['Calligraphy', 'Engraving'],
@@ -76,38 +103,48 @@ function filterSample(list: Artist[], opts?: ArtistQuery): Artist[] {
   return out;
 }
 
-/** All approved artists, optionally filtered by search/category/city. */
+const enc = encodeURIComponent;
+
 export async function getApprovedArtists(opts?: ArtistQuery): Promise<Artist[]> {
-  if (!supabase) return filterSample(sampleArtists, opts);
-  let query = supabase
-    .from('artists').select('*').eq('status', 'approved')
-    .order('featured', { ascending: false })
-    .order('created_at', { ascending: false });
-  if (opts?.category) query = query.contains('art_forms', [opts.category]);
-  if (opts?.city) query = query.ilike('city', `%${opts.city}%`);
-  if (opts?.q) query = query.or(
-    `name.ilike.%${opts.q}%,city.ilike.%${opts.q}%,story.ilike.%${opts.q}%`
-  );
-  const { data, error } = await query;
-  if (error || !data) return [];
-  return data as Artist[];
+  if (!supabaseReady) return filterSample(sampleArtists, opts);
+  const parts = ['status=eq.approved', 'select=*', 'order=featured.desc,created_at.desc'];
+  if (opts?.category) parts.push(`art_forms=cs.${enc(`{"${opts.category}"}`)}`);
+  if (opts?.city) parts.push(`city=ilike.*${enc(opts.city)}*`);
+  if (opts?.q) {
+    const q = enc(opts.q);
+    parts.push(`or=(name.ilike.*${q}*,city.ilike.*${q}*,story.ilike.*${q}*)`);
+  }
+  return (await restGet(`artists?${parts.join('&')}`)) as Artist[];
 }
 
 export async function getFeaturedArtists(limit = 3): Promise<Artist[]> {
-  if (!supabase) return sampleArtists.slice(0, limit);
-  const { data } = await supabase
-    .from('artists').select('*').eq('status', 'approved')
-    .order('featured', { ascending: false })
-    .order('created_at', { ascending: false })
-    .limit(limit);
-  return (data as Artist[]) ?? [];
+  if (!supabaseReady) return sampleArtists.slice(0, limit);
+  return (await restGet(
+    `artists?status=eq.approved&select=*&order=featured.desc,created_at.desc&limit=${limit}`
+  )) as Artist[];
 }
 
 export async function getArtistBySlug(slug: string): Promise<Artist | null> {
-  if (!supabase) return sampleArtists.find((a) => a.slug === slug) ?? null;
-  const { data } = await supabase
-    .from('artists').select('*').eq('slug', slug).eq('status', 'approved').maybeSingle();
-  return (data as Artist) ?? null;
+  if (!supabaseReady) return sampleArtists.find((a) => a.slug === slug) ?? null;
+  const rows = (await restGet(
+    `artists?slug=eq.${enc(slug)}&status=eq.approved&select=*&limit=1`
+  )) as Artist[];
+  return rows[0] ?? null;
+}
+
+/** Create an inquiry (client -> Shreya). Used by the inquiry form. */
+export async function createInquiry(payload: {
+  artist_slug: string;
+  client_name: string;
+  client_contact: string;
+  event_details?: string;
+}): Promise<{ ok: boolean }> {
+  return restPost('inquiries', payload);
+}
+
+/** Submit a new artist (always lands as pending for Shreya to approve). */
+export async function submitArtist(payload: Partial<Artist>): Promise<{ ok: boolean }> {
+  return restPost('artists', { ...payload, status: 'pending' });
 }
 
 /** Deterministic wine gradient for cards without a hero image yet. */
