@@ -67,7 +67,7 @@ a { color: inherit; text-decoration: none; }
   94%  { opacity: 0.75; }
   100% { transform: translate3d(18px, 1480px, 0) rotate(372deg); opacity: 0; }
 }
-@media (prefers-reduced-motion: reduce) { .fleaf { animation: none; display: none; } }
+/* Leaves keep drifting gently even with reduced-motion (they're soft and slow). */
 
 /* ---- labels ---- */
 .lbl { font-weight: 400; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }

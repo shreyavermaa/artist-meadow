@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: shreyavermaa/artistmeadow   # <-- change if your repo name/owner differs
+  repo: shreyavermaa/artist-meadow
   branch: main
   base_url: https://sveltia-cms-auth.galleryofshreya.workers.dev
 
