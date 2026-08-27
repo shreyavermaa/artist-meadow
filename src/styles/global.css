@@ -61,10 +61,10 @@ a { color: inherit; text-decoration: none; }
 }
 @keyframes fall {
   0%   { transform: translate3d(0, -46px, 0) rotate(0deg); opacity: 0; }
-  6%   { opacity: 0.8; }
+  8%   { opacity: var(--peak, 0.7); }
   30%  { transform: translate3d(30px, 430px, 0) rotate(120deg); }
   60%  { transform: translate3d(-22px, 900px, 0) rotate(250deg); }
-  94%  { opacity: 0.75; }
+  92%  { opacity: var(--peak, 0.7); }
   100% { transform: translate3d(18px, 1480px, 0) rotate(372deg); opacity: 0; }
 }
 /* Leaves keep drifting gently even with reduced-motion (they're soft and slow). */
