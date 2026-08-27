@@ -6,7 +6,7 @@ values (
   'Shreya',
   array['Calligraphy','Engraving','Wedding Signage'],
   'Indore', 'India',
-  'I write love letters in ink — place cards, wedding vows, the little details people keep forever. A steady hand, and a soft spot for gold on ivory.',
+  'I write love letters in ink. Place cards, wedding vows, the little details people keep forever. A steady hand, and a soft spot for gold on ivory.',
   null,
   '[]'::jsonb,
   '{"instagram":"galleryofshreya","website":"https://galleryofshreya.com"}'::jsonb,

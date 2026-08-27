@@ -21,7 +21,7 @@ const artists = await getApprovedArtists({
   city: city || undefined,
 });
 ---
-<Base title={`Browse artists${category ? ` · ${category}` : ''} — Artist Meadow`}>
+<Base title={`Browse artists${category ? ` · ${category}` : ''} · Artist Meadow`}>
   <div class="page">
     <Garden />
     <FallingLeaves />
@@ -50,7 +50,7 @@ const artists = await getApprovedArtists({
         {artists.length > 0 ? (
           <div class="grid">{artists.map((a) => <ArtistCard artist={a} />)}</div>
         ) : (
-          <p class="empty">No artists here yet — but the meadow is growing. 🌿<br />Are you an artist? <a href="/join" style="color:var(--blush)">Join us</a>.</p>
+          <p class="empty">No artists here yet, but the meadow is growing. 🌿<br />Are you an artist? <a href="/join" style="color:var(--blush)">Join us</a>.</p>
         )}
       </section>
 

@@ -3,7 +3,7 @@ import '../styles/global.css';
 import GardenDefs from '../components/GardenDefs.astro';
 
 const {
-  title = 'Artist Meadow — a garden of artists',
+  title = 'Artist Meadow · a garden of artists',
   description = 'A curated meadow of artists for weddings, events and custom work. Search by region and art form.',
 } = Astro.props as { title?: string; description?: string };
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();

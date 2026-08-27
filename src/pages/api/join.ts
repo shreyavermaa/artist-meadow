@@ -63,7 +63,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   let res = await insert(row);
   if (!res.ok) {
-    // Likely a slug clash — retry once with a short suffix.
+    // Likely a slug clash , retry once with a short suffix.
     row.slug = `${base}-${Math.random().toString(36).slice(2, 6)}`;
     res = await insert(row);
   }

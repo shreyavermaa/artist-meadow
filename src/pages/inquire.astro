@@ -17,7 +17,7 @@ if (Astro.request.method === 'POST') {
   if (client_name && client_contact) {
     const r = await createInquiry({ artist_slug: slug, client_name, client_contact, event_details });
     sent = r.ok;
-    if (!r.ok) error = 'Something went wrong — please try again.';
+    if (!r.ok) error = 'Something went wrong. Please try again.';
   } else {
     error = 'Please add your name and a way to reach you.';
   }
@@ -26,11 +26,11 @@ if (Astro.request.method === 'POST') {
 const artist = slug ? await getArtistBySlug(slug) : null;
 const who = artist ? artist.name : 'an artist';
 ---
-<PageShell title={`Inquire — ${who} · Artist Meadow`} description="Tell us about your celebration and we'll connect you.">
+<PageShell title={`Inquire · ${who} · Artist Meadow`} description="Tell us about your celebration and we'll connect you.">
   {sent ? (
     <div class="success-card glass">
       <h2>Sent with love 🌿</h2>
-      <p>Thank you. We'll connect you with {who} personally — no bots, no spam, just a warm introduction. Keep an eye on your messages.</p>
+      <p>Thank you. We'll connect you with {who} personally. No bots, no spam, just a warm introduction. Keep an eye on your messages.</p>
       <p style="margin-top:18px"><a class="inq-btn" href="/browse">Back to the meadow</a></p>
     </div>
   ) : (
@@ -61,7 +61,7 @@ const who = artist ? artist.name : 'an artist';
           {error && <div class="form-status">{error}</div>}
           <div class="form-actions">
             <button type="submit" class="btn-primary">Send inquiry</button>
-            <div class="form-note">Your details come straight to us — we personally make the introduction. 🤍</div>
+            <div class="form-note">Your details come straight to us. We personally make the introduction. 🤍</div>
           </div>
         </form>
       </div>

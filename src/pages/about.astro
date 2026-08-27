@@ -4,7 +4,7 @@ import site from '../data/site.json';
 const about = (site as any).about ?? { title: 'About', body: '' };
 const paras = String(about.body).split('\n\n');
 ---
-<PageShell title={`${about.title} — Artist Meadow`} description="About Artist Meadow, a curated meadow of artists for weddings, events and custom work.">
+<PageShell title={`${about.title} · Artist Meadow`} description="About Artist Meadow, a curated meadow of artists for weddings, events and custom work.">
   <section class="page-head">
     <div class="script">Our story</div>
     <h1>{about.title}</h1>

@@ -28,7 +28,7 @@ const jsonld = {
 };
 ---
 <Base
-  title={`${artist.name} — ${artist.art_forms[0] ?? 'Artist'}${artist.city ? ` in ${artist.city}` : ''} · Artist Meadow`}
+  title={`${artist.name} · ${artist.art_forms[0] ?? 'Artist'}${artist.city ? ` in ${artist.city}` : ''} · Artist Meadow`}
   description={artist.story ?? `${artist.name}, ${artist.art_forms.join(', ')} in ${region}.`}
 >
   <div class="page">
@@ -50,6 +50,7 @@ const jsonld = {
             <div class="artist-tags">{artist.art_forms.map((t) => <span>{t}</span>)}</div>
           )}
           {artist.story && <p class="artist-intro">{artist.story}</p>}
+          {artist.price_hint && <div class="artist-price">{artist.price_hint}</div>}
           {(links.instagram || links.website || links.pinterest || links.youtube) && (
             <div class="artist-links">
               {links.instagram && (

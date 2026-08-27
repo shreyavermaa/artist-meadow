@@ -1,4 +1,4 @@
-// Thin Supabase REST (PostgREST) client via fetch — no realtime/WebSocket,
+// Thin Supabase REST (PostgREST) client via fetch , no realtime/WebSocket,
 // so it runs identically on Node (dev) and Cloudflare (prod).
 
 const url = import.meta.env.PUBLIC_SUPABASE_URL as string | undefined;
@@ -65,7 +65,7 @@ export const sampleArtists: Artist[] = [
   {
     slug: 'shreya', name: 'Shreya', art_forms: ['Calligraphy', 'Engraving'],
     city: 'Indore', country: 'India',
-    story: 'I write love letters in ink — place cards, wedding vows, the little details people keep forever.',
+    story: 'I write love letters in ink. Place cards, wedding vows, the little details people keep forever.',
     hero_image: null, gallery: [],
     links: { instagram: 'galleryofshreya', website: 'https://galleryofshreya.com' },
     price_hint: 'On request', keywords: ['calligraphy', 'engraving', 'wedding', 'indore'],
@@ -74,7 +74,7 @@ export const sampleArtists: Artist[] = [
   {
     slug: 'aarohi-mehta', name: 'Aarohi Mehta', art_forms: ['Mehndi & Henna'],
     city: 'Jaipur', country: 'India',
-    story: 'Bridal mehndi with a modern, airy line — florals, jaali, and a little gold.',
+    story: 'Bridal mehndi with a modern, airy line. Florals, jaali, and a little gold.',
     hero_image: null, gallery: [], links: { instagram: 'aarohi.henna' },
     price_hint: 'From ₹8,000', keywords: ['mehndi', 'henna', 'bridal', 'jaipur'],
     status: 'approved', featured: true,

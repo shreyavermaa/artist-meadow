@@ -6,7 +6,7 @@ import site from '../data/site.json';
 const cloud = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME ?? '';
 const preset = import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? '';
 ---
-<PageShell title="Join Artist Meadow" description="Add your work to Artist Meadow — a curated meadow of artists for weddings, events and custom work.">
+<PageShell title="Join Artist Meadow" description="Add your work to Artist Meadow, a curated meadow of artists for weddings, events and custom work.">
   <section class="page-head">
     <div class="script">Are you an artist?</div>
     <h1>Join the meadow</h1>
@@ -81,14 +81,15 @@ const preset = import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? '';
       </div>
 
       <div class="field">
-        <label for="price_hint">Price hint (optional)</label>
-        <input type="text" id="price_hint" name="price_hint" placeholder="From ₹8,000 · or 'On request'" />
+        <label for="price_hint">Starting prices (optional)</label>
+        <input type="text" id="price_hint" name="price_hint" placeholder="Place cards from ₹500 · Murals from ₹15,000 · or 'On request'" />
+        <p class="hint">Prices vary by piece, so give a few starting points if you can.</p>
       </div>
 
       <div class="form-actions">
         <button type="submit" class="btn-primary">Submit to the meadow</button>
         <div class="form-status" id="status"></div>
-        <div class="form-note">No public phone numbers — inquiries reach you privately through us. 🌿</div>
+        <div class="form-note">No public phone numbers. Inquiries reach you privately through us. 🌿</div>
       </div>
     </form>
 
@@ -152,7 +153,7 @@ const preset = import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? '';
         statusEl.textContent = '';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err) {
-        statusEl.textContent = 'Something went wrong — please try again.';
+        statusEl.textContent = 'Something went wrong. Please try again.';
         btn.disabled = false;
       }
     });
