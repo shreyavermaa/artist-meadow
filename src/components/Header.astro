@@ -18,3 +18,12 @@ const { brand, nav = [] } = Astro.props as { brand: string; nav: NavItem[] };
     <a class="nav-cta" href="/join">Join Us</a>
   </nav>
 </header>
+<script is:inline>
+  (function () {
+    var nav = document.querySelector('.site-top');
+    if (!nav) return;
+    var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 24); };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
