@@ -2,8 +2,17 @@
 interface NavItem { label: string; href: string; }
 const { brand, nav = [] } = Astro.props as { brand: string; nav: NavItem[] };
 ---
-<header class="site-top glass">
+<header class="site-top">
   <a class="brand" href="/">{brand}</a>
+  <button
+    class="nav-toggle"
+    type="button"
+    aria-label="Open menu"
+    aria-expanded="false"
+    onclick="const h=this.closest('.site-top');const o=h.classList.toggle('open');this.setAttribute('aria-expanded',String(o))"
+  >
+    <span></span><span></span><span></span>
+  </button>
   <nav class="nav">
     {nav.map((item) => <a href={item.href}>{item.label}</a>)}
     <a class="nav-cta" href="/join">Join Us</a>
