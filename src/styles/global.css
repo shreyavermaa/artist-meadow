@@ -72,6 +72,13 @@ a { color: inherit; text-decoration: none; }
 /* ---- labels ---- */
 .lbl { font-weight: 400; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }
 
+/* ---- back button ---- */
+.back-row { padding: 14px 34px 0; max-width: 1080px; margin: 0 auto; }
+.back-btn { border: 1px solid rgba(245, 239, 225, 0.24); color: #f3e7ea; background: rgba(247, 242, 232, 0.06);
+  font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 8px 16px; border-radius: 22px; cursor: pointer; }
+.back-btn:hover { background: rgba(247, 242, 232, 0.14); }
+
 /* ---- header ---- */
 .site-top {
   display: flex; align-items: center; justify-content: space-between;
@@ -130,6 +137,8 @@ a { color: inherit; text-decoration: none; }
 .site-footer { text-align: center; padding: 30px 40px 46px; color: var(--soft); font-size: 11.5px; letter-spacing: 0.05em; }
 .site-footer .brand { font-size: 22px; display: block; margin-bottom: 8px; }
 .site-footer a { color: var(--blush); }
+.site-footer .credit { margin-top: 14px; }
+.site-footer .credit a { color: var(--gold); }
 
 /* ---- browse ---- */
 .browse-head { text-align: center; padding: 40px 30px 6px; }

@@ -1,0 +1,18 @@
+---
+import PageShell from '../layouts/PageShell.astro';
+import site from '../data/site.json';
+const about = (site as any).about ?? { title: 'About', body: '' };
+const paras = String(about.body).split('\n\n');
+---
+<PageShell title={`${about.title} — Artist Meadow`} description="About Artist Meadow, a curated meadow of artists for weddings, events and custom work.">
+  <section class="page-head">
+    <div class="script">Our story</div>
+    <h1>{about.title}</h1>
+  </section>
+  <div class="form-wrap" style="text-align:center">
+    {paras.map((p: string) => (
+      <p style="font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.7;color:#efe4e8;margin:0 0 20px">{p}</p>
+    ))}
+    <p style="margin-top:20px"><a class="inq-btn" href="/join">Join the meadow</a></p>
+  </div>
+</PageShell>

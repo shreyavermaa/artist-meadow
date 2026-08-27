@@ -1,16 +1,32 @@
 ---
 const { brand, footer } = Astro.props as {
   brand: string;
-  footer: { tagline: string; credit: string; email: string; instagram: string };
+  footer: {
+    tagline: string;
+    credit: string;
+    creditUrl?: string;
+    creditInstagram?: string;
+    email: string;
+    instagram: string;
+  };
 };
 ---
 <footer class="site-footer">
   <span class="brand">{brand}</span>
   <p>{footer.tagline}</p>
   <p>
-    <a href={`https://instagram.com/${footer.instagram}`}>@{footer.instagram}</a>
+    <a href={`https://instagram.com/${footer.instagram}`} target="_blank" rel="noopener">@{footer.instagram}</a>
     &nbsp;·&nbsp;
     <a href={`mailto:${footer.email}`}>{footer.email}</a>
   </p>
-  <p style="margin-top:10px;opacity:.7">{footer.credit}</p>
+  <p class="credit">
+    {footer.creditUrl ? (
+      <a href={footer.creditUrl} target="_blank" rel="noopener">{footer.credit}</a>
+    ) : (
+      <span>{footer.credit}</span>
+    )}
+    {footer.creditInstagram && (
+      <> &nbsp;·&nbsp; <a href={`https://instagram.com/${footer.creditInstagram}`} target="_blank" rel="noopener">@{footer.creditInstagram}</a></>
+    )}
+  </p>
 </footer>

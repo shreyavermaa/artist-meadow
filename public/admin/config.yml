@@ -1,0 +1,69 @@
+backend:
+  name: github
+  repo: shreyavermaa/artistmeadow   # <-- change if your repo name/owner differs
+  branch: main
+  base_url: https://sveltia-cms-auth.galleryofshreya.workers.dev
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+site_url: https://artistmeadow.com
+display_url: https://artistmeadow.com
+
+collections:
+  - name: "content"
+    label: "Site Content"
+    description: "Edit the words across Artist Meadow. Saving publishes in a minute or two."
+    files:
+      - name: "site"
+        label: "Homepage & Site Words"
+        file: "src/data/site.json"
+        fields:
+          - { label: "Brand name", name: "brand", widget: "string" }
+          - label: "Navigation links"
+            name: "nav"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Link", name: "href", widget: "string" }
+          - label: "Hero (top of homepage)"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Small script word", name: "flourish", widget: "string" }
+              - { label: "Eyebrow (small caps)", name: "eyebrow", widget: "string" }
+              - { label: "Headline (use <br> and <em>…</em>)", name: "titleHtml", widget: "string" }
+              - { label: "Sub-line", name: "lede", widget: "text" }
+              - { label: "Search placeholder", name: "searchPlaceholder", widget: "string" }
+          - label: "Categories (art forms)"
+            name: "categories"
+            widget: "list"
+            field: { label: "Category", name: "category", widget: "string" }
+          - label: "Featured section heading"
+            name: "featured"
+            widget: "object"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+          - label: "Join band"
+            name: "join"
+            widget: "object"
+            fields:
+              - { label: "Script line", name: "script", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+              - { label: "Button text", name: "cta", widget: "string" }
+              - { label: "Button link", name: "url", widget: "string" }
+          - label: "About page"
+            name: "about"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Body (blank line between paragraphs)", name: "body", widget: "text" }
+          - label: "Footer"
+            name: "footer"
+            widget: "object"
+            fields:
+              - { label: "Tagline", name: "tagline", widget: "string" }
+              - { label: "Credit", name: "credit", widget: "string" }
+              - { label: "Email", name: "email", widget: "string" }
+              - { label: "Instagram handle", name: "instagram", widget: "string" }

@@ -5,6 +5,7 @@ import Garden from '../../components/Garden.astro';
 import FallingLeaves from '../../components/FallingLeaves.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Back from '../../components/Back.astro';
 import site from '../../data/site.json';
 import { getArtistBySlug, artistGradient } from '../../lib/supabase';
 
@@ -35,6 +36,7 @@ const jsonld = {
     <FallingLeaves />
     <div class="wrap">
       <Header brand={site.brand} nav={site.nav} />
+      <Back />
 
       <section class="artist-hero">
         <div class="artist-photo" style={bg ? `background:${bg}` : ''}>

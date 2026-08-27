@@ -6,6 +6,7 @@ import FallingLeaves from '../components/FallingLeaves.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ArtistCard from '../components/ArtistCard.astro';
+import Back from '../components/Back.astro';
 import site from '../data/site.json';
 import { getApprovedArtists } from '../lib/supabase';
 
@@ -26,6 +27,7 @@ const artists = await getApprovedArtists({
     <FallingLeaves />
     <div class="wrap">
       <Header brand={site.brand} nav={site.nav} />
+      <Back />
 
       <section class="browse-head">
         <div class="lbl eyebrow">The Meadow</div>
